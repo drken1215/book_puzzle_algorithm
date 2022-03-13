@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <set>
+#include <utility>
+#include <random>
 using namespace std;
 
 // 盤面を二次元ベクトルで表す
@@ -135,14 +137,19 @@ void print(const Sudoku& board) {
     const Field& field = board.get();
     for (int x = 0; x < 9; ++x) {
         for (int y = 0; y < 9; ++y) {
-            if (field[x][y] == -1) cout << "*";
-            else cout << field[x][y];
+            if (field[x][y] == -1)
+                cout << "*";
+            else
+                cout << field[x][y];
         }
         cout << endl;
     }
 }
 
 int main() {
+    // 乱数のシードを固定する
+    mt19937 rand_src(1);
+
     // 数独を入力する
     Sudoku board;
     vector<pair<int, int>> cells;  // ピンク色マスの集合
@@ -161,7 +168,7 @@ int main() {
 
     // 数独を最初に解き、解の 1 つを board に入力して初期解とする
     vector<Field> res = solve(board, false);  // 解を 1 つだけ求める
-    for (pair<int,int> p : cells)
+    for (pair<int, int> p : cells)
         board.put(p.first, p.second, res[0][p.first][p.second]);
 
     // 初期盤面を改めて解く
@@ -175,37 +182,33 @@ int main() {
         // 一意解問題が見つかったら探索を打ち切る
         if (score == 1) break;
 
-        // 数独の盤面をコピーしておく
-        auto board_prev = board;
+        // 新たな盤面を作る
+        Sudoku board2 = board;
 
-        // ピンク色マスから、ランダムに 2 マスを選ぶ
-        int one = rand() % cells.size();
-        int two = rand() % cells.size();
-        int x1 = cells[one].first, y1 = cells[one].second;
-        int x2 = cells[two].first, y2 = cells[two].second;
+        // 「ピンク色マスの数字をランダムに変更する」を 2 回実施する
+        for (int con = 0; con < 2; ++con) {
+            // ピンク色マスをランダムに選び、一旦数字を削除する
+            int id = rand_src() % cells.size();
+            int x = cells[id].first, y = cells[id].second;
+            board2.reset(x, y);
 
-        // 2 マスの数字をランダムに置き換える
-        board.reset(x1, y1);
-        vector<int> can1 = board.find_choices(x1, y1);
-        int val1 = can1[rand() % can1.size()];
-        board.put(x1, y1, val1);
-        board.reset(x2, y2);
-        vector<int> can2 = board.find_choices(x2, y2);
-        int val2 = can2[rand() % can2.size()];
-        board.put(x2, y2, val2);
+            // 選んだマスに入れられる数字をランダムに選んで入れる
+            vector<int> can = board2.find_choices(x, y);
+            int val = can[rand_src() % can.size()];
+            board2.put(x, y, val);
+        }
 
         // 新たな盤面で数独を解く
-        res = solve(board);
+        res = solve(board2);
         int new_score = res.size();  // 新たな盤面の解の個数
 
-        // 改善しなければ元に戻す
-        if (new_score >= score || new_score == 0) {
-            board = board_prev;
-        } else {
-            cout << iter << ": " << score << " sols -> " 
+        // 改善するならば置き換える
+        if (new_score < score && new_score != 0) {
+            cout << iter << ": " << score << " sols -> "
                  << new_score << " sols" << endl;
-            print(board);  // 改善後の盤面を出力
+            board = board2;  // 盤面を更新
             score = new_score;  // スコアを更新
+            print(board);  // 改善後の盤面を出力
         }
     }
 
