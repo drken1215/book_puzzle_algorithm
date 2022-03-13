@@ -10,26 +10,26 @@ using Field = vector<vector<int>>;
 // 数独を解くためのクラス
 class Sudoku {
  private:
-    Field field;
+    Field field_;
 
  public:
     // コンストラクタ (未確定マスの値を -1 で表す)
-    Sudoku() : field(9, vector<int>(9, -1)) {
+    Sudoku() : field_(9, vector<int>(9, -1)) {
     }
 
     // filed データを返す
     const Field& get() {
-        return field;
+        return field_;
     }
 
     // マス (x, y) に数字 val を入れる
     void put(int x, int y, int val) {
-        field[x][y] = val;
+        field_[x][y] = val;
     }
 
     // マス (x, y) の数字を削除する
     void reset(int x, int y) {
-        field[x][y] = -1;
+        field_[x][y] = -1;
     }
 
     // 入力データを受け取る
@@ -61,7 +61,7 @@ class Sudoku {
 bool Sudoku::find_empty(int& x, int& y) {
     for (x = 0; x < 9; ++x)
         for (y = 0; y < 9; ++y)
-            if (field[x][y] == -1)
+            if (field_[x][y] == -1)
                 return true;
     return false;
 }
@@ -73,19 +73,19 @@ vector<int> Sudoku::find_choices(int x, int y) {
 
     // 同じ行に含まれる数字を除外する
     for (int i = 0; i < 9; ++i)
-        if (field[x][i] != -1)
-            cannot_use.insert(field[x][i]);
+        if (field_[x][i] != -1)
+            cannot_use.insert(field_[x][i]);
 
     // 同じ列に含まれる数字を除外する
     for (int i = 0; i < 9; ++i)
-        if (field[i][y] != -1)
-            cannot_use.insert(field[i][y]);
+        if (field_[i][y] != -1)
+            cannot_use.insert(field_[i][y]);
 
     // 同じブロックに含まれる数字を除外する
     int x2 = x / 3 * 3, y2 = y / 3 * 3;  // 同じブロックの左上のマス
     for (int i = x2; i < x2 + 3; ++i)
         for (int j = y2; j < y2 + 3; ++j)
-            if (field[i][j] != -1)
+            if (field_[i][j] != -1)
                 cannot_use.insert(field[i][j]);
 
     // マス (x, y) に入れられる数字からなる配列を求める
@@ -153,3 +153,4 @@ int main() {
         }
     }
 }
+
