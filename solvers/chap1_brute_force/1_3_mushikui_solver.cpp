@@ -49,41 +49,6 @@ int64_t decode(const vector<int>& vec) {
     return res;
 }
 
-// 虫食算の解を出力する (plicand: 被乗数、plier: 乗数)
-void print(int64_t plicand, int64_t plier) {
-    // 全体が k 桁になるように空白を入れて文字列 s を出力
-    auto sub_print = [&](const string& s, int k) -> void {
-        cout << string(k - s.size(), ' ');
-        cout << s << endl;
-    };
-
-    // 積、乗数の桁数、積の桁数
-    int64_t product = plicand * plier;
-    int digit_plier = to_string(plier).size();
-    int digit_product = to_string(product).size();
-
-    // 被乗数と乗数の出力
-    sub_print(to_string(plicand), digit_product);
-    sub_print(to_string(plier), digit_product);
-
-    // 棒線
-    cout << string(digit_product, '-') << endl;
-
-    // 部分積
-    for (int i = 0; i < digit_plier; ++i) {
-        // 乗数の右から i 桁めの値を取得する
-        int plier_val = plier % 10;
-        plier /= 10;
-
-        // 出力
-        sub_print(to_string(plicand * plier_val), digit_product - i);
-    }
-
-    // 棒線と積
-    cout << string(digit_product, '-') << endl;
-    sub_print(to_string(product), digit_product);
-}
-
 // 虫食算ソルバーを管理するクラス
 class Mushikuizan {
  private:
@@ -196,7 +161,8 @@ int main() {
     // 解を出力
     cout << "The num of solutions: " << res.size() << endl;
     for (int i = 0; i < res.size(); ++i) {
-        cout << i << " th solution:" << endl;
-        print(res[i].first, res[i].second);
+        cout << i << " th solution: "
+             << res[i].first << " * " << res[i].second
+             << " = " << res[i].first * res[i].second << endl;
     }
 }
