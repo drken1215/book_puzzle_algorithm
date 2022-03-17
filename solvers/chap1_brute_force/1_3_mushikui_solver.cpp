@@ -58,6 +58,9 @@ class Mushikuizan {
     // 部分積
     vector<string> middle_;
 
+    // 答えを表す配列 (被乗数と乗数のペアを格納)
+    vector<pair<int64_t, int64_t>> res_;
+
  public:
     // コンストラクタ
     Mushikuizan(const string& multiplicand,
@@ -67,9 +70,6 @@ class Mushikuizan {
         multiplicand_(multiplicand), multiplier_(multiplier),
         product_(product), middle_(middle) {
     }
-
-    // 答えを表す配列 (被乗数と乗数のペアを格納)
-    vector<pair<int64_t, int64_t>> res;
 
     // 乗数の □ に数字を入れていく再帰関数
     // plicand: 被乗数に入れた数字、vec: 乗数の □ に数字を入れた結果
@@ -83,7 +83,7 @@ class Mushikuizan {
             if (!is_valid(plicand * plier, product_)) return;
 
             // 答えを格納する
-            res.emplace_back(plicand, plier);
+            res_.emplace_back(plicand, plier);
             return;
         }
 
@@ -134,12 +134,12 @@ class Mushikuizan {
     // 虫食算を解く (被乗数と乗数のペアを格納した配列を返す)
     vector<pair<int64_t, int64_t>> solve() {
         // 答えを表す配列を空にする
-        res.clear();
+        res_.clear();
 
         // 被乗数の □ の方から数字を入れていく
         vector<int> vec;  // 空の配列
         rec_plicand(vec);
-        return res;
+        return res_;
     }
 };
 

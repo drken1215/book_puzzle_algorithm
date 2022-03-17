@@ -163,6 +163,6 @@ int main() {
 
     // 答えを出力する
     cout << "The number of solutions: " << res.size() << endl;
-    for (string str : res)
+    for (const string& str : res)
         cout << str << " = " << TARGET << endl;
 }

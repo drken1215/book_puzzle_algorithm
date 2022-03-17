@@ -68,7 +68,7 @@ string decode_poland(const string& exp) {
                     second = "(" + second + ")";
             }
 
-            // 演算子をもとに復元した計算式を配列の末尾に挿入
+            // 演算子をもとに復元した計算式を配列の末尾に挿入する
             if (c == '+')
                 space.push_back(first + " + " + second);
             else if (c == '-')
@@ -97,7 +97,7 @@ vector<string> solve(vector<int> val, int target) {
     };
 
     // 4 つの数 val の並び替えを順に試していく
-    sort(val.begin(), val.end());  // val を辞書順最小に
+    sort(val.begin(), val.end());  // val を辞書順最小にする
     do {
         // 4 つの数字を連結してできる文字列 fours を作る
         string fours = "";
@@ -147,6 +147,6 @@ int main() {
     vector<string> res = solve(val, target);
 
     // 出力
-    for (string exp : res)
+    for (const string& exp : res)
         cout << exp << " = " << target << endl;
 }
