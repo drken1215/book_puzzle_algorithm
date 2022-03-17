@@ -71,6 +71,12 @@ void solve(const vector<string>& board,
         nodes.push_back(nex);
     }
 
+    // スタートマスからゴールマスへ辿り着けない場合は、例外処理する
+    if (dist[goal.first][goal.second] == NOTIN) {
+        cout << "No Path" << endl;
+        return;
+    }
+
     // 矢印を辿ることで、経路復元を開始する
     vector<string> res = board;  // 答えを出力するための盤面
     int cur_x = goal.first, cur_y = goal.second;
