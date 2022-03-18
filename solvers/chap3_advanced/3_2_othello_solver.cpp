@@ -11,8 +11,9 @@ using Color = int;
 // オセロ盤の石の座標の集合も整数値 (0 以上 2^16 未満) で表す
 using Stones = int;
 
-// オセロ盤のサイズ
+// オセロ盤のサイズと、無限大を表す値
 const int SIZE = 4;
+const int INF = SIZE * SIZE;  // 評価値の理論最大値
 
 // 色を定義する
 const Color BLACK = 1;
@@ -119,6 +120,9 @@ int rec(int alpha, int beta, Stones black, Stones white, Color col) {
         return -rec(-beta, -alpha, black, white, 1 - col);
     }
 
+    // 無限小を表す値で評価値を初期化する
+    int res = -INF;
+
     // 打てる手を順に調べていく
     for (Cell cell : mine) {
         // 手を打ったあとの盤面を求める
@@ -132,14 +136,19 @@ int rec(int alpha, int beta, Stones black, Stones white, Color col) {
         else
             white2 |= 1 << cell;
 
-        // 遷移局面の評価値を符号反転して受け取り、値を更新する
+        // 遷移局面の評価値を符号反転して受け取る
         int score = -rec(-beta, -alpha, black2, white2, 1 - col);
-        alpha = max(alpha, score);
 
-        // β カット
-        if (alpha >= beta) return alpha;
+        // その値が最大となる手を選びたい
+        res = max(res, score);
+
+        // 枝刈り
+        if (res >= beta) return res;
+
+        // 手番側がこれ以上の得点が得られることは保証できるアルファ値の更新
+        alpha = max(alpha, res);
     }
-    return alpha;
+    return res;
 }
 
 int main() {
@@ -148,6 +157,6 @@ int main() {
     Stones white = (1 << 5) | (1 << 10);  // 白石の配置
 
     // α = -16 (理論最小値)、β = 16 (理論最大値)、先手は黒
-    int score = rec(-SIZE * SIZE, SIZE * SIZE, black, white, BLACK);
+    int score = rec(-INF, INF, black, white, BLACK);
     cout << score << endl;
 }
