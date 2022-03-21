@@ -108,7 +108,7 @@ vector<string> solve(vector<int> val, int target) {
         for (char op1 : ops) {
             for (char op2 : ops) {
                 for (char op3 : ops) {
-                    // まず、パターン "xxxoooo" を作る
+                    // まず、パターン "xxxxooo" を作る
                     string exp = fours + op1 + op2 + op3;
 
                     // パターン "xxxxooo" を試す
