@@ -86,7 +86,7 @@ vector<int> Sudoku::find_choices(int x, int y) {
     for (int i = x2; i < x2 + 3; ++i)
         for (int j = y2; j < y2 + 3; ++j)
             if (field_[i][j] != -1)
-                cannot_use.insert(field[i][j]);
+                cannot_use.insert(field_[i][j]);
 
     // マス (x, y) に入れられる数字からなる配列を求める
     vector<int> res;
