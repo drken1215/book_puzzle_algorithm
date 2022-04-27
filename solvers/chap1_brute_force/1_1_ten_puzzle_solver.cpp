@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <set>
 #include <string>
 #include <cmath>
 #include <utility>
@@ -59,13 +60,22 @@ string decode_poland(const string& exp) {
             string first = space.back();
             space.pop_back();
 
-            // 掛け算、割り算の場合、演算子の優先順位が高いので
-            // その前後の計算式 (単独の数値を除く) にカッコをつける
-            if (c == '*' || c == '/') {
-                if (first.size() > 1)
+            // 演算子が「*」「/」で、
+            // 演算子の前の式が「+」「-」を含むとき括弧をつける
+            if (first.find('+') != string::npos ||
+                first.find('-') != string::npos) {
+                if (c == '*' || c == '/') {
                     first = "(" + first + ")";
-                if (second.size() > 1)
+                }
+            }
+            
+            // 演算子が「-」「*」「/」で、
+            // 演算子の後の式が「+」「-」を含むとき括弧をつける
+            if (second.find('+') != string::npos ||
+                second.find('-') != string::npos) {
+                if (c == '-' || c == '*' || c == '/') {
                     second = "(" + second + ")";
+                }
             }
 
             // 演算子をもとに復元した計算式を配列の末尾に挿入する
@@ -84,16 +94,17 @@ string decode_poland(const string& exp) {
 
 // テンパズルソルバー
 // val: 4 つの数を格納した配列、target: 作りたい数
-vector<string> solve(vector<int> val, int target) {
+set<string> solve(vector<int> val, int target) {
     // 答えを表す計算式を格納する配列
-    vector<string> res;
+    set<string> res;
 
     // 逆ポーランド記法の計算式 exp を試すための関数オブジェクト
     const double EPS = 1e-9;  // 十分小さい値
     auto check = [&](const string& exp) -> void {
         // 計算結果と作りたい数との差が十分小さいとき、一致とみなす
-        if (abs(calc_poland(exp) - target) < EPS)
-            res.push_back(decode_poland(exp));
+        if (abs(calc_poland(exp) - target) < EPS) {
+            res.insert(decode_poland(exp));
+        }
     };
 
     // 4 つの数 val の並び替えを順に試していく
@@ -108,7 +119,7 @@ vector<string> solve(vector<int> val, int target) {
         for (char op1 : ops) {
             for (char op2 : ops) {
                 for (char op3 : ops) {
-                    // まず、パターン "xxxxooo" を作る
+                    // まず、パターン "xxxoooo" を作る
                     string exp = fours + op1 + op2 + op3;
 
                     // パターン "xxxxooo" を試す
@@ -144,9 +155,10 @@ int main() {
     cin >> target;
 
     // テンパズルを解く
-    vector<string> res = solve(val, target);
+    const set<string>& res = solve(val, target);
 
     // 出力
     for (const string& exp : res)
         cout << exp << " = " << target << endl;
 }
+
