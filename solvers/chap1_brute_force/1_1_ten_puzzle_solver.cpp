@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <set>
 #include <string>
 #include <cmath>
 #include <utility>
@@ -68,7 +67,7 @@ string decode_poland(const string& exp) {
                     first = "(" + first + ")";
                 }
             }
-            
+
             // 演算子が「-」「*」「/」で、
             // 演算子の後の式が「+」「-」を含むとき括弧をつける
             if (second.find('+') != string::npos ||
@@ -94,17 +93,16 @@ string decode_poland(const string& exp) {
 
 // テンパズルソルバー
 // val: 4 つの数を格納した配列、target: 作りたい数
-set<string> solve(vector<int> val, int target) {
+vector<string> solve(vector<int> val, int target) {
     // 答えを表す計算式を格納する配列
-    set<string> res;
+    vector<string> res;
 
     // 逆ポーランド記法の計算式 exp を試すための関数オブジェクト
     const double EPS = 1e-9;  // 十分小さい値
     auto check = [&](const string& exp) -> void {
         // 計算結果と作りたい数との差が十分小さいとき、一致とみなす
-        if (abs(calc_poland(exp) - target) < EPS) {
-            res.insert(decode_poland(exp));
-        }
+        if (abs(calc_poland(exp) - target) < EPS)
+            res.push_back(decode_poland(exp));
     };
 
     // 4 つの数 val の並び替えを順に試していく
@@ -155,7 +153,7 @@ int main() {
     cin >> target;
 
     // テンパズルを解く
-    const set<string>& res = solve(val, target);
+    const vector<string>& res = solve(val, target);
 
     // 出力
     for (const string& exp : res)
