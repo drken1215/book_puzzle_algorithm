@@ -118,7 +118,7 @@ class Mushikuizan {
         // 新しい □ に数字を入れる
         for (int add = 0; add <= 9; ++add) {
             // 左端に 0 は入れられない
-            if (vec.empty() && add == 0) continue;
+            if (vec.size() == multiplicand_.size() - 1 && add == 0) continue;
 
             // すでに数字が入っていて矛盾している場合はスキップ
             if (!is_valid_sub(add, vec.size(), multiplicand_))
@@ -166,3 +166,4 @@ int main() {
              << " = " << res[i].first * res[i].second << endl;
     }
 }
+
