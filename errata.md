@@ -9,5 +9,6 @@
 | p. 19    | リスト 1-2        |                          | 関数 `decode_poland()` を、以下ファイルのように変更します。https://github.com/drken1215/book_puzzle_algorithm/blob/master/solvers/chap1_brute_force/1_1_ten_puzzle_solver.cpp | 引き算を表す演算子「－」の後側にもカッコが必要でした。 |  |
 | P. 73    | リスト 1-17 の 78 行目 | `if (vec.empty() && add == 0) continue;`   | `if (vec.size() == multiplicand_.size() - 1 && add == 0) continue;` |                                                              |  |
 | p. 254   | 図 3-49 の caption   | 頂点 (1, 1)                                 | 頂点 (1, 2)                                             |  |  |
+| p. 267 | コラム「テトロミノ」 | 本文中の「図J」と「図K」 | それぞれ「図H」と「図I」 | | |
 
 　
